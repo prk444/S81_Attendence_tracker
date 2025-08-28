@@ -3,11 +3,12 @@
 from transformers import pipeline
 import tiktoken  # Install with: pip install tiktoken
 
-# Initialize zero-shot classification pipeline with Top P (nucleus sampling)
+# Initialize zero-shot classification pipeline with Top P and Temperature
 classifier = pipeline(
     "zero-shot-classification",
     model="facebook/bart-large-mnli",
-    top_p=0.8  # Set Top P for nucleus sampling
+    top_p=0.8,         # Nucleus sampling
+    temperature=0.7    # Set temperature for randomness
 )
 
 # Dynamic data (could come from user input, database, or sensors)
