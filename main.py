@@ -7,24 +7,25 @@ import tiktoken  # Install with: pip install tiktoken
 classifier = pipeline(
     "zero-shot-classification",
     model="facebook/bart-large-mnli",
-    top_p=0.8,         # Nucleus sampling
-    temperature=0.7,   # Set temperature for randomness
-    top_k=50           # Set Top K for sampling from top 50 tokens
+    top_p=0.8,
+    temperature=0.7,
+    top_k=50
 )
 
-# Dynamic data (could come from user input, database, or sensors)
+# Dynamic data
 classroom_name = "Class 10A"
 date = "2025-08-28"
 known_students = ["Alice", "Bob", "Carol", "David"]
 
-# Construct a dynamic prompt using real-time/contextual information
+# Structured output prompt
 attendance_prompt = (
     f"Today is {date}. This is a photo from {classroom_name}. "
     f"The registered students are: {', '.join(known_students)}. "
-    "Identify and list the names of all students present for attendance."
+    "Identify and list the names of all students present for attendance. "
+    "Return the result as a JSON object with the following format: "
+    '{"present": [list of present student names], "absent": [list of absent student names]}'
 )
 
-# Possible attendance outcomes
 candidate_labels = [
     "All students present",
     "Some students absent",
@@ -32,13 +33,12 @@ candidate_labels = [
     "Unable to identify students"
 ]
 
-# Perform dynamic prompting classification
 result = classifier(attendance_prompt, candidate_labels)
 
-print("Dynamic Attendance Prompt:", attendance_prompt)
-print("AI's Dynamic Prompting Response:", result)
+print("Structured Output Attendance Prompt:", attendance_prompt)
+print("AI's Structured Output Response:", result)
 
-# Token counting using tiktoken (OpenAI tokenizer, works for most transformer models)
+# Token counting using tiktoken
 encoding = tiktoken.get_encoding("cl100k_base")
 prompt_tokens = len(encoding.encode(attendance_prompt))
 label_tokens = sum(len(encoding.encode(label)) for label in candidate_labels)
@@ -49,5 +49,5 @@ print(f"Tokens used in candidate labels: {label_tokens}")
 print(f"Total tokens sent to AI: {total_tokens}")
 
 # Explanation for video:
-# Tokens are the basic units of text that AI models process, such as words or word pieces.
-# Counting tokens helps you understand how much input/output is being processed by
+# Structured output in LLMs means instructing the AI to return results in a specific, machine-readable format (like JSON).
+# This makes it easier for other programs to parse and use the AI's output automatically.
