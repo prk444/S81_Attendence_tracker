@@ -1,6 +1,7 @@
-# Dynamic Prompting for Attendance Tracker Project
+# Dynamic Prompting for Attendance Tracker Project with Token Logging
 
 from transformers import pipeline
+import tiktoken  # Install with: pip install tiktoken
 
 # Initialize zero-shot classification pipeline (used for demonstration)
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
@@ -31,7 +32,16 @@ result = classifier(attendance_prompt, candidate_labels)
 print("Dynamic Attendance Prompt:", attendance_prompt)
 print("AI's Dynamic Prompting Response:", result)
 
-# Explanation:
-# Dynamic prompting means generating the prompt on-the-fly using current context or data.
-# Here, the prompt is built using the classroom name, date, and the list of registered students,
-# making the AI's task more specific and context-aware for improved attendance tracking.
+# Token counting using tiktoken (OpenAI tokenizer, works for most transformer models)
+encoding = tiktoken.get_encoding("cl100k_base")
+prompt_tokens = len(encoding.encode(attendance_prompt))
+label_tokens = sum(len(encoding.encode(label)) for label in candidate_labels)
+total_tokens = prompt_tokens + label_tokens
+
+print(f"Tokens used in prompt: {prompt_tokens}")
+print(f"Tokens used in candidate labels: {label_tokens}")
+print(f"Total tokens sent to AI: {total_tokens}")
+
+# Explanation for video:
+# Tokens are the basic units of text that AI models process, such as words or word pieces.
+# Counting tokens helps you understand how much input/output is being processed by
