@@ -1,13 +1,14 @@
-# Zero-Shot Prompting for Attendance Tracker Project
+# One-Shot Prompting for Attendance Tracker Project
 
 from transformers import pipeline
 
-# Initialize zero-shot classification pipeline
+# Initialize zero-shot classification pipeline (used for demonstration)
 classifier = pipeline("zero-shot-classification", model="facebook/bart-large-mnli")
 
-# Zero-shot prompt for attendance tracking
+# One-shot prompt for attendance tracking with a single example
 attendance_prompt = (
-    "Given a classroom photo, identify and list the names of all students present for attendance."
+    "Example: In this classroom photo, Alice, Bob, and Carol are present. "
+    "Now, given a new classroom photo, identify and list the names of all students present for attendance."
 )
 
 # Possible attendance outcomes
@@ -18,10 +19,13 @@ candidate_labels = [
     "Unable to identify students"
 ]
 
-# Perform zero-shot classification
+# Perform one-shot classification
 result = classifier(attendance_prompt, candidate_labels)
 
-print("Zero-Shot Attendance Prompt:", attendance_prompt)
-print("AI's Zero-Shot Response:", result)
+print("One-Shot Attendance Prompt:", attendance_prompt)
+print("AI's One-Shot Response:", result)
 
-# This demonstrates zero-shot prompting in Python for an automated attendance tracker.
+# Explanation:
+# One-shot prompting means providing the AI with a single example of the task in the prompt.
+# Here, we show the AI an example attendance extraction before asking it to perform the same task on a new input.
+# This helps the AI better understand the expected output format for the task.
